@@ -11,6 +11,23 @@ from scapy.layers.l2 import *
 # Need this cmd to be able to handle packets forwarded by the target machine and pass to gateway
 # echo 1 > /proc/sys/net//ipv4/ip_forward
 
+def arp_scan(ips: str) -> List['str']:
+    """
+    Function that performs an ARP scan of the subnet that is being targeted,
+    this will provide the other functions with specific targets to spoof.
+
+    :param ips: (required) Target IP range with CIDR block (e.g., 10.10.10.0/24)
+    :return: A list containing a list of IPs that were returned from the ARP scan
+    """
+    arp_request = ARP(pdst=ips)  # where should the request go/what ip - /24 subnet
+    # arp_request.show() #show content
+    broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")  # send the packet to the broadcast MAC address
+    arp_request_broadcast = broadcast / arp_request  # combine the ip and MAC address to create an ARP request for any IP in the subnet
+    answered_request_list = srp(arp_request_broadcast, timeout=1, verbose=False)[
+        0]  # srp allows for packets with custom Ether to be sent & wait 1 sec for response and move on/ returns 2 vals
+    return answered_request_list[0][1]
+
+
 def craft_spoof_response(target_ip: str, spoofed_ip: str) -> None:
     """
     Function that takes two args that contain the target endpoint IP,
