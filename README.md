@@ -30,6 +30,16 @@ Example of attack:
 - CTRL + C is recognized by this tool as an 'exit' request and will stop the spoof/reset the target(s)
 - I wrote this with Python 2.7 capabilities as well, I commented out that code to avoid errors running in Python3
 
+## Resource Path:
+```
+rootdir:.
+│   .gitignore
+│   arp_spoofer.py
+│   LICENSE
+│   README.md
+│   requirements.txt
+```
+
 ## Using the Tool:
 
 #### Start the ARP Spoofer:
